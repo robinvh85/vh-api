@@ -1,0 +1,59 @@
+<script>
+  function download(){
+    //document.location = "/tests/download"
+
+    axios({
+      method: 'post',
+      url: '/tests/download',
+      responseType: 'arraybuffer'
+    }).then(function (response) {
+      console.log(response)
+      var filename = 'item.csv';
+      var link = document.createElement('a');
+      var blob = new Blob([response.data], {type:"text/csv;charset=SJIS"});
+      link.href = window.URL.createObjectURL(blob);
+      link.download = filename;
+
+      document.body.appendChild(link);
+
+      link.click();
+
+      document.body.removeChild(link);
+    });
+
+/*
+    $.ajax({
+      method: "POST",
+      url: "/tests/download"
+    }).done(function( response, status, request ) {
+      console.log(response, status, request)
+      // Try to find out the filename from the content disposition `filename` value
+        var disposition = request.getResponseHeader('content-disposition');
+        var matches = /"([^"]*)"/.exec(disposition);
+        var filename = (matches != null && matches[1] ? matches[1] : 'file.csv');
+
+        var arrayBuffer = request.response;
+
+        console.log(arrayBuffer)
+        // if you want to access the bytes:
+        var byteArray = new Uint8Array(arrayBuffer);
+        console.log(byteArray)
+
+        // The actual download
+        var blob = new Blob([byteArray], { type: 'text/csv' });
+        var link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = filename;
+
+        document.body.appendChild(link);
+
+        link.click();
+
+        document.body.removeChild(link);
+
+    });
+    */
+  }
+</script>
+
+<button onclick="download()">Download</button>
